@@ -16,9 +16,9 @@ return new class extends Migration
             $table->foreignUlid('shopping_list_id');
             $table->string('description');
             $table->unsignedSmallInteger('quantity')->default(1);
-            $table->boolean('isPicked')->default(false);
+            $table->float('price');
+            $table->boolean('is_picked')->default(false);
             $table->unsignedMediumInteger('order')->nullable();
-            $table->timestamp('last_reset_at');
             $table->timestamps();
         });
     }

@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('shopping_lists', function (Blueprint $table) {
-            $table->ulid();
-            $table->string('name')->nullable();
+            $table->ulid('id');
+            $table->float('spending_limit')->nullable();
             $table->foreignId('user_id');
             $table->timestamps();
         });

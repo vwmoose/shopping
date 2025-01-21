@@ -1,7 +1,6 @@
 <script setup>
 
     import { computed, ref } from 'vue'
-    import _ from 'lodash'
     import DeleteIcon from '@/Components/Icons/Delete.vue'
     import TextInput from '@/Components/TextInput.vue'
     import PrimaryButton from '@/Components/PrimaryButton.vue'
@@ -9,7 +8,7 @@
     import ShoppingCartIcon from '@/Components/Icons/ShoppingCart.vue'
     import ShoppingCartRemoveIcon from '@/Components/Icons/ShoppingCartRemove.vue'
 
-    const emit = defineEmits(['addItem', 'buyItem', 'removeItem'])
+    const emit = defineEmits(['addItem', 'buyItem', 'removeItem', 'updateItem'])
 
     const props = defineProps({
         addable: {
@@ -39,7 +38,7 @@
         description: '',
         price: '0.00',
         quantity: '1',
-        isPurchased: false,
+        is_picked: false,
     })
 
     const refDescription = ref(null)
@@ -65,16 +64,17 @@
         product.value.price = parseFloat(product.value.price).toFixed(2)
 
         /* emit add item event */
-        emit('addItem', _.clone(product.value))
+        emit('addItem', { ...product.value })
 
         /* reset form */
         Object.assign(product.value, {
             description: '',
             price: '0',
             quantity: '1',
-            isPurchased: false,
+            is_picked: false,
         })
 
+        /* set focus to description field */
         refDescription.value.focus()
     }
 
@@ -94,7 +94,7 @@
 
     <div class="space-y-2">
 
-        <table v-if="hasItems" class="w-full mb-4 border-separate border-spacing-2">
+        <table v-if="hasItems" class="w-full border-separate border-spacing-2">
 
             <thead>
                 <tr>
@@ -110,12 +110,28 @@
                 <template v-for="(product, idx) in modelValue" :key="`list_item_${idx}`">
     
                     <tr :class="{
-                            'line-through text-gray-400': product.isPurchased && addable
+                            'line-through text-gray-400': product.is_picked && addable
                         }">
 
                         <td class="text-left">{{ product.description }}</td>
                         <td class="text-right">{{ product.price }}</td>
-                        <td v-if="!addable" class="text-center">{{ product.quantity }}</td>
+                        <td v-if="!addable" class="flex justify-center">
+                            <div class="grid w-full max-w-16 grid-cols-1">
+                                <select 
+                                    v-model="product.quantity"
+                                    :name="`quantity-${idx}`" 
+                                    class="col-start-1 row-start-1 appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                </select>
+                            </div>
+                        </td>
                         <td class="text-right space-x-1">
                             <SecondaryButton v-if="addable" v-on:click="buy(idx)">
                                 <ShoppingCartIcon class="w-4 h-4 fill-current" />
@@ -135,20 +151,20 @@
         </table>
 
         <div v-if="props.addable" class="flex space-x-2">
-            
+
             <TextInput 
                 ref="refDescription"
                 v-model="product.description"
                 type="text"
                 placeholder="description"
-                class="flex-1" />
+                class="flex-1 px-2 py-1" />
 
             <TextInput
                 v-model="product.price" 
                 v-on:keyup.enter="add()" 
                 type="text"
                 placeholder="Price"
-                class="w-20 text-right" />
+                class="w-20 px-2 py-1 text-right" />
 
             <!-- <TextInput v-model="product.quantity" v-on:keyup.enter="add()" type="text" placeholder="Quantity" class="w-12 text-center"/> -->
             <PrimaryButton
