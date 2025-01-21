@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ShoppingList;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -37,6 +38,9 @@ class ShoppingListController extends Controller
         $payload = $request->all();
 
         try {
+
+            DB::beginTransaction();
+
             // update or create the shopping cart
             $list = $user->list()->updateOrCreate(
                 [
@@ -64,12 +68,16 @@ class ShoppingListController extends Controller
                     );
                 });
 
+            DB::commit();
+
             // return redirect
             return Redirect::route('dashboard');
 
         } catch (Exception $e) {
+            DB::rollBack();
+
             // log 
-            Log::info($e->getMessage() . ' on ' . $e->getLine());
+            Log::error($e->getMessage() . ' on ' . $e->getLine());
         }
     }
 }
