@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ShoppingList;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -67,8 +68,8 @@ class ShoppingListController extends Controller
             return Redirect::route('dashboard');
 
         } catch (Exception $e) {
-
-            dd($e->getMessage());
+            // log 
+            Log::info($e->getMessage() . ' on ' . $e->getLine());
         }
     }
 }
