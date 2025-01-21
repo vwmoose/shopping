@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ShoppingListResource;
 use App\Models\ShoppingList;
 use Exception;
 use Illuminate\Http\Request;
@@ -13,7 +12,7 @@ use Inertia\Response;
 class ShoppingListController extends Controller
 {
     /**
-     * @return ShoppingListResource
+     * @return Response
      */
     public function index(Request $request): Response
     {
