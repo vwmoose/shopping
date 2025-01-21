@@ -20,11 +20,3 @@ composer run dev
 ```
 
 Then visit the following url http://127.0.0.1:8000/dashboard
-
-## Login
-I've created a demo user called Happy Shopper, their login details are:-
-
-```
-username: happy@shopper.com
-password: HelpMeShop
-```
